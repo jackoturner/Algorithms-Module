@@ -31,7 +31,7 @@ public:
         n->part = part;             
         n->next = NULL;
 
-        size++;                 // Increase size of the list
+        size++;     // Increase size of the list
         n->position = size;  
 
         // If list is empty new node becomes head
@@ -113,6 +113,49 @@ public:
         if (!found) cout << "No occurrences";
         cout << "\n";
     }
+
+    // Remove all nodes belonging to a chosen name part
+    void Remove_word(char part) {
+    // If the list is empty, nothing to do
+    if (head == NULL) {
+        return;
+    }
+
+    // Remove matching nodes at the head
+    while (head != NULL && head->part == part) {
+        Node* temp = head;
+        head = head->next;
+        delete temp;
+        size--;
+    }
+
+    // If list became empty after removing heads
+    if (head == NULL) {
+        return;
+    }
+
+    // Remove matching nodes in the rest of the list
+    Node* current = head;
+    while (current->next != NULL) {
+        if (current->next->part == part) {
+            Node* temp = current->next;
+            current->next = current->next->next;
+            delete temp;
+            size--;
+        } else {
+            current = current->next;
+        }
+    }
+
+    // Reassign positions 1 -> size
+    Node* temp = head;
+    int newPos = 1;
+    while (temp != NULL) {
+        temp->position = newPos;
+        newPos++;
+        temp = temp->next;
+    }
+}
 };
 
 // Main program logic
@@ -154,6 +197,11 @@ int main() {
     // Final printing
     cout << "\nFinal list:\n";
     fn.Print_list();
+    fn.Print_full_name();
+
+    // Remove name example
+    cout << "\nAfter removing a word:\n";
+    fn.Remove_word('m');
     fn.Print_full_name();
 
     return 0;
